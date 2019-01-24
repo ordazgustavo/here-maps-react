@@ -1,23 +1,8 @@
-/**
- * @class ExampleComponent
- */
+import HEREMap from './HEREMap'
+import Circle from './Circle'
+import Marker from './Marker'
+import RouteLine from './RouteLine'
 
-import * as React from 'react'
+export { Circle, HEREMap, Marker, RouteLine }
 
-import styles from './styles.css'
-
-export type Props = { text: string }
-
-export default class ExampleComponent extends React.Component<Props> {
-  render() {
-    const {
-      text
-    } = this.props
-
-    return (
-      <div className={styles.test}>
-        Example Component: {text}
-      </div>
-    )
-  }
-}
+export default HEREMap

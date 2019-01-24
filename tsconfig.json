@@ -7,6 +7,8 @@
     "sourceMap": true,
     "allowJs": false,
     "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    // "strict": true,
     "declaration": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
@@ -16,7 +18,8 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "experimentalDecorators": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "build", "dist", "example", "rollup.config.js"]
