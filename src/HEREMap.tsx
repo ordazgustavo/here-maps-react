@@ -176,14 +176,12 @@ export class HEREMap extends React.Component<HEREMapProps, State> {
 
     return (
       <MapContext.Provider value={this.state}>
-        <div>
-          <div
-            className="map-container"
-            id={`map-container-${uniqueId()}`}
-            style={{ height: '100vh' }}
-          >
-            {children}
-          </div>
+        <div
+          className="map-container"
+          id={`map-container-${uniqueId()}`}
+          style={{ height: '100%' }}
+        >
+          {children}
         </div>
       </MapContext.Provider>
     )

@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 
 import {HEREMap, Marker, RouteLine} from 'here-maps-react'
 
+const APP_ID = process.env.REACT_APP_HERE_APP_ID
+const APP_CODE = process.env.REACT_APP_HERE_APP_CODE
+
 const markers = [
   {
     lat: -12.1199408,
@@ -47,8 +50,8 @@ export default class App extends Component {
 
   componentDidMount() {
     const platform = new window.H.service.Platform({
-      app_id: 'PySrZIoQXkioFhLkW5Ib',
-      app_code: 'n-HYHSvf1QJ5wK95TDTszA'
+      app_id: APP_ID,
+      app_code: APP_CODE
     });
 
     const routingParameters = {
@@ -79,9 +82,10 @@ export default class App extends Component {
   render () {
     const {shape} = this.state
     return (
+      <div style={{height: 500, width: 300}}>
       <HEREMap 
-        appId="PySrZIoQXkioFhLkW5Ib"
-        appCode="n-HYHSvf1QJ5wK95TDTszA"
+        appId={APP_ID}
+        appCode={APP_CODE}
         center={{ lat: -12.0464, lng: -77.0428 }}
         zoom={12}
         interactive
@@ -92,6 +96,7 @@ export default class App extends Component {
         ))}
         {shape && <RouteLine shape={shape} strokeColor="#48dad0" lineWidth={4} />}
       </HEREMap>
+      </div>
     )
   }
 }
