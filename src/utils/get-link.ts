@@ -1,7 +1,3 @@
-// import from npm
-import 'core-js'
-import { assignIn } from 'lodash-es'
-
 // declare an interface for the object that is
 // used to describe each link and stored in the
 // map
@@ -19,8 +15,8 @@ const loadedLinks: Map<string, LinkState> = new Map()
 
 /**
  * Get a style or other linked resource from a remote location.
- * @param name {string} - The name of the resource to be retrieved.
  * @param url {string} - The URL/location of the resource to be retrieved.
+ * @param name {string} - The name of the resource to be retrieved.
  */
 export function getLink(url: string, name: string) {
   if (
@@ -30,11 +26,9 @@ export function getLink(url: string, name: string) {
     const link: HTMLLinkElement = document.createElement('link')
     const body = document.getElementsByTagName('body')[0]
 
-    assignIn(link, {
-      href: url,
-      rel: 'stylesheet',
-      type: 'text/css',
-    })
+    link.href = url
+    link.rel = 'stylesheet'
+    link.type = 'text/css'
 
     body.appendChild(link)
 

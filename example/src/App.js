@@ -82,7 +82,7 @@ export default class App extends Component {
   render () {
     const {shape} = this.state
     return (
-      <div style={{height: 500, width: 300}}>
+      <div style={{height: 500, width: '100vw'}}>
       <HEREMap 
         appId={APP_ID}
         appCode={APP_CODE}

@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { debounce, uniqueId, isEqual } from 'lodash-es'
 
 import cache, { onAllLoad } from './utils/cache'
+import debounce from './utils/debounce'
 import getLink from './utils/get-link'
 import getScriptMap from './utils/get-script-map'
 import MapContext, { HEREMapContext } from './utils/map-context'
@@ -68,24 +68,23 @@ export class HEREMap extends React.Component<HEREMapProps, State> {
   }
 
   public componentDidUpdate(prevProps: HEREMapProps) {
-    if (prevProps.center && !isEqual(prevProps.center, this.props.center)) {
-      this.setCenter(prevProps.center)
+    if (
+      prevProps.center &&
+      this.props.center &&
+      (prevProps.center.lat !== this.props.center.lat ||
+        prevProps.center.lng !== this.props.center.lng)
+    ) {
+      this.setCenter(this.props.center)
     }
 
-    if (prevProps.zoom && prevProps.zoom !== this.props.zoom) {
-      this.setZoom(prevProps.zoom)
+    if (
+      prevProps.zoom &&
+      this.props.zoom &&
+      prevProps.zoom !== this.props.zoom
+    ) {
+      this.setZoom(this.props.zoom)
     }
   }
-
-  // public componentWillMount() {
-  //   const { secure } = this.props
-
-  //   cache(getScriptMap(secure === true))
-  //   const stylesheetUrl = `${
-  //     secure === true ? 'https:' : ''
-  //   }//js.api.here.com/v3/3.0/mapsjs-ui.css`
-  //   getLink(stylesheetUrl, 'HERE Maps UI')
-  // }
 
   public componentWillUnmount() {
     window.removeEventListener('resize', this.debouncedResizeMap)
@@ -178,7 +177,7 @@ export class HEREMap extends React.Component<HEREMapProps, State> {
       <MapContext.Provider value={this.state}>
         <div
           className="map-container"
-          id={`map-container-${uniqueId()}`}
+          id={`map-container`}
           style={{ height: '100%' }}
         >
           {children}

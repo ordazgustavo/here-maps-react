@@ -1,5 +1,3 @@
-import 'core-js'
-
 /**
  * Map for HTML strings against H.map.DomIcon instances
  */

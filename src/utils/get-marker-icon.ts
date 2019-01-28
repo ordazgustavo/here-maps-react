@@ -1,5 +1,3 @@
-import 'core-js'
-
 /**
  * Map for image URL strings against H.map.Icon instances
  */
