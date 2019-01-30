@@ -22,9 +22,7 @@
     "deploy": "gh-pages -d example/build",
     "format": "prettier --write \"src/**/*.+(js|md|css|json|ts|tsx)\""
   },
-  "dependencies": {
-    "lodash-es": "^4.17.11"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
