@@ -2,10 +2,12 @@ import React from 'react'
 
 import MapContext, { HEREMapContext } from './utils/map-context'
 
+type Shape = string[]
+
 export interface RouteLineProps extends H.map.Polyline.Options, H.geo.IPoint {
   strokeColor?: string
   lineWidth?: number
-  shape: string[]
+  shape: Shape
 }
 
 class RouteLine extends React.Component<RouteLineProps, object> {
@@ -13,7 +15,14 @@ class RouteLine extends React.Component<RouteLineProps, object> {
 
   public context: HEREMapContext
 
-  private routeLine: H.map.Polyline
+  private routeLine?: H.map.Polyline
+
+  public componentDidUpdate(prevProps: RouteLineProps) {
+    const { shape } = this.props
+    if (this.didShapeChange(prevProps.shape, shape)) {
+      this.addRouteLineToMap()
+    }
+  }
 
   public componentWillUnmount() {
     const { map } = this.context
@@ -23,14 +32,14 @@ class RouteLine extends React.Component<RouteLineProps, object> {
     }
   }
 
-  public render() {
-    const { map } = this.context
-
-    if (map && !this.routeLine) {
-      this.addRouteLineToMap()
-    }
-
-    return null
+  private didShapeChange = (prevShape: Shape, nextShape: Shape) => {
+    const diff = nextShape.filter((coord, i) => {
+      if (coord && prevShape && prevShape[i]) {
+        return coord !== prevShape[i]
+      }
+      return true
+    })
+    return Boolean(diff.length)
   }
 
   private addRouteLineToMap() {
@@ -49,10 +58,23 @@ class RouteLine extends React.Component<RouteLineProps, object> {
     })
 
     if (map) {
+      if (this.routeLine) {
+        map.removeObject(this.routeLine)
+      }
       map.addObject(routeLine)
 
       this.routeLine = routeLine
     }
+  }
+
+  public render() {
+    const { map } = this.context
+
+    if (map && !this.routeLine) {
+      this.addRouteLineToMap()
+    }
+
+    return null
   }
 }
 
