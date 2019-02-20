@@ -63,7 +63,12 @@ class Map extends React.Component {
         center={{ lat: -12.0464, lng: -77.0428 }}
         zoom={12}
       >
-        <Marker lat={-12.1199408} lng={-77.037241} />
+        <Marker
+          lat={-12.1199408}
+          lng={-77.037241}
+          draggable
+          onDragEnd={e => {...}}
+        />
       </HEREMap>
     )
   }
@@ -72,12 +77,16 @@ class Map extends React.Component {
 
 ### Props
 
-| Property | Type        | Optional | Description                                   |
-| -------- | ----------- | -------- | --------------------------------------------- |
-| bitmap   | string      | true     | An image to be used as a marker               |
-| lat      | number      | false    | The latitude to place the marker              |
-| lng      | number      | false    | The longitude to place the marker             |
-| children | JSX.Element | true     | You can use markup to put elements on the map |
+| Property    | Type            | Optional | Description                                    |
+| ----------- | --------------- | -------- | ---------------------------------------------- |
+| bitmap      | string          | true     | An image to be used as a marker                |
+| lat         | number          | false    | The latitude to place the marker               |
+| lng         | number          | false    | The longitude to place the marker              |
+| children    | JSX.Element     | true     | You can use markup to put elements on the map  |
+| draggable   | boolean         | true     | Flag to enable drag events on the marker       |
+| onDragStart | (event) => void | true     | Function to listen to HERE's `dragstart` event |
+| onDrag      | (event) => void | true     | Function to listen to HERE's `drag` event      |
+| onDragEnd   | (event) => void | true     | Function to listen to HERE's `dragend` event   |
 
 ### RouteLine
 
