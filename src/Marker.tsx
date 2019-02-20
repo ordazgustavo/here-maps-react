@@ -43,8 +43,8 @@ export class Marker extends React.Component<MarkerProps> {
   public componentDidUpdate(prevProps: MarkerProps) {
     if (prevProps.lat !== this.props.lat || prevProps.lng !== this.props.lng) {
       this.setPosition({
-        lat: prevProps.lat,
-        lng: prevProps.lng,
+        lat: this.props.lat,
+        lng: this.props.lng,
       })
     }
   }
