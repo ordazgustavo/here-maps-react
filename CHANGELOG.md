@@ -1,3 +1,10 @@
+# 0.1.1 (February 19, 2019)
+
+Add drag events feature support for Marker component.
+
+- [#3](https://github.com/ordazgustavo/here-maps-react/pull/3) Feat/marker drag
+  event. ([@ordazsgustavo](https://github.com/ordazsgustavo))
+
 # 0.1.0 (January 30, 2019)
 
 This release is considered a breaking change due to changes in the way the map
