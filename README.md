@@ -1,9 +1,12 @@
-# here-maps-react
+# here-maps-react [![NPM](https://img.shields.io/npm/v/here-maps-react.svg)](https://www.npmjs.com/package/here-maps-react) ![](https://img.shields.io/github/license/ordazgustavo/here-maps-react.svg) ![](https://badgen.net/bundlephobia/minzip/here-maps-react)
 
 > React components library for HERE Maps
 
-[![NPM](https://img.shields.io/npm/v/here-maps-react.svg)](https://www.npmjs.com/package/here-maps-react)
-![](https://img.shields.io/github/license/ordazgustavo/here-maps-react.svg)
+Easily integrate HERE Maps into your app with a set of React components.
+
+Full TypeScript support!
+
+Tree shakeable!
 
 ## Install
 
