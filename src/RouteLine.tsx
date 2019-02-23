@@ -10,11 +10,9 @@ export interface RouteLineProps extends H.map.Polyline.Options, H.geo.IPoint {
   shape: Shape
 }
 
-class RouteLine extends React.Component<RouteLineProps, object> {
+class RouteLine extends React.Component<RouteLineProps> {
   public static contextType = MapContext
-
-  public context: HEREMapContext
-
+  public context!: HEREMapContext
   private routeLine?: H.map.Polyline
 
   public componentDidUpdate(prevProps: RouteLineProps) {

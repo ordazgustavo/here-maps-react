@@ -17,10 +17,9 @@ export class Circle extends React.Component<CircleProps> {
     radius: 1000,
     strokeColor: 'black',
   }
+  public context!: HEREMapContext
 
-  public context: HEREMapContext
-
-  private circle: H.map.Circle
+  private circle?: H.map.Circle
 
   public componentDidUpdate(prevProps: CircleProps) {
     if (prevProps.lat !== this.props.lat || prevProps.lng !== this.props.lng) {
@@ -41,16 +40,6 @@ export class Circle extends React.Component<CircleProps> {
     if (map && this.circle) {
       map.removeObject(this.circle)
     }
-  }
-
-  public render() {
-    const { map } = this.context
-
-    if (map && !this.circle) {
-      this.addCircleToMap()
-    }
-
-    return null
   }
 
   private addCircleToMap() {
@@ -79,12 +68,26 @@ export class Circle extends React.Component<CircleProps> {
     }
   }
 
-  private setCenter(point: H.geo.IPoint): void {
-    this.circle.setCenter(point)
+  private setCenter(point: H.geo.IPoint) {
+    if (this.circle) {
+      this.circle.setCenter(point)
+    }
   }
 
-  private setRadius(radius: number): void {
-    this.circle.setRadius(radius)
+  private setRadius(radius: number) {
+    if (this.circle) {
+      this.circle.setRadius(radius)
+    }
+  }
+
+  public render() {
+    const { map } = this.context
+
+    if (map && !this.circle) {
+      this.addCircleToMap()
+    }
+
+    return null
   }
 }
 
