@@ -1,15 +1,11 @@
 import React from 'react'
 
 export interface HEREMapContext {
-  map: H.Map | null
-  behavior: H.mapevents.Behavior | null
-  ui: H.ui.UI | null
+  map?: H.Map
+  behavior?: H.mapevents.Behavior
+  ui?: H.ui.UI
 }
 
-const MapContext = React.createContext<HEREMapContext>({
-  map: null,
-  behavior: null,
-  ui: null,
-})
+const MapContext = React.createContext({} as HEREMapContext)
 
 export default MapContext

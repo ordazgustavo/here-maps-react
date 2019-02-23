@@ -31,20 +31,12 @@ export interface HEREMapProps extends H.Map.Options {
 
 export interface OwnState {}
 
-type State = OwnState & HEREMapContext
-
-export class HEREMap extends React.Component<HEREMapProps, State> {
-  public state: State = {
-    map: null,
-    behavior: null,
-    ui: null,
-  }
+export class HEREMap extends React.Component<HEREMapProps, HEREMapContext> {
   private debouncedResizeMap: any
-  public static contextType = MapContext
-  public context: HEREMapContext
+  // public static contextType = MapContext
 
-  constructor(props: HEREMapProps, context: HEREMapContext) {
-    super(props, context)
+  constructor(props: HEREMapProps) {
+    super(props)
 
     this.debouncedResizeMap = debounce(this.resizeMap, 200)
   }
@@ -114,11 +106,7 @@ export class HEREMap extends React.Component<HEREMapProps, State> {
 
     const mapElement = document.querySelector('.map-container')
 
-    const HERE: HEREMapContext = {
-      map: null,
-      behavior: null,
-      ui: null,
-    }
+    const HERE: HEREMapContext = {}
 
     let layer = defaultLayers.normal.map
     if (setLayer) {
@@ -149,7 +137,7 @@ export class HEREMap extends React.Component<HEREMapProps, State> {
 
   public setCenter(point: H.geo.IPoint): void {
     const { animateCenter } = this.props
-    const { map } = this.context
+    const { map } = this.state
     if (map) {
       map.setCenter(point, animateCenter === true)
     }
@@ -157,14 +145,14 @@ export class HEREMap extends React.Component<HEREMapProps, State> {
 
   public setZoom(zoom: number): void {
     const { animateZoom } = this.props
-    const { map } = this.context
+    const { map } = this.state
     if (map) {
       map.setZoom(zoom, animateZoom === true)
     }
   }
 
   private resizeMap = () => {
-    const { map } = this.context
+    const { map } = this.state
     if (map) {
       map.getViewPort().resize()
     }

@@ -22,7 +22,7 @@ export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
 
 export class Marker extends React.Component<MarkerProps> {
   public static contextType = MapContext
-  public context: HEREMapContext
+  public context!: HEREMapContext
   private marker?: H.map.DomMarker | H.map.Marker
 
   public componentDidMount() {
