@@ -38,6 +38,12 @@ export class HEREMap extends React.Component<HEREMapProps, HEREMapContext> {
   constructor(props: HEREMapProps) {
     super(props)
 
+    this.state = {
+      map: undefined,
+      behavior: undefined,
+      ui: undefined,
+    }
+
     this.debouncedResizeMap = debounce(this.resizeMap, 200)
   }
 
@@ -159,6 +165,7 @@ export class HEREMap extends React.Component<HEREMapProps, HEREMapContext> {
   }
 
   public render() {
+    const { map } = this.state
     const { children } = this.props
 
     return (
@@ -168,7 +175,7 @@ export class HEREMap extends React.Component<HEREMapProps, HEREMapContext> {
           id={`map-container`}
           style={{ height: '100%' }}
         >
-          {children}
+          {map ? children : null}
         </div>
       </MapContext.Provider>
     )
