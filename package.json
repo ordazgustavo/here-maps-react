@@ -7,14 +7,14 @@
   "repository": "ordazgustavo/here-maps-react",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
   },
   "scripts": {
-    "test": "cross-env CI=1 react-scripts-ts test --env=jsdom",
-    "test:watch": "react-scripts-ts test --env=jsdom",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
     "build": "rollup -c",
     "start": "rollup -c -w",
     "prepare": "npm run build",
@@ -22,16 +22,17 @@
     "deploy": "gh-pages -d example/build",
     "format": "prettier --write \"src/**/*.+(js|md|css|json|ts|tsx)\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "lodash.debounce": "^4.0.8"
+  },
   "peerDependencies": {
-    "prop-types": "^15.5.4",
     "react": "^16.3.0 || ^16.8.0",
     "react-dom": "^16.3.0 || ^16.8.0"
   },
   "devDependencies": {
-    "@svgr/rollup": "^4.1.0",
     "@types/heremaps": "^3.0.13",
-    "@types/jest": "^24.0.6",
+    "@types/jest": "^24.0.15",
+    "@types/lodash.debounce": "^4.0.6",
     "@types/react": "^16.8.4",
     "@types/react-dom": "^16.8.2",
     "babel-core": "^6.26.3",
@@ -39,11 +40,12 @@
     "cross-env": "^5.2.0",
     "gh-pages": "^2.0.1",
     "husky": "^1.3.1",
+    "jest": "^24.8.0",
+    "jest-environment-jsdom": "^24.8.0",
     "lint-staged": "^8.1.4",
     "prettier": "^1.16.4",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-scripts": "^2.1.5",
     "rollup": "^1.2.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.2.0",
@@ -51,7 +53,40 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-typescript2": "^0.19.2",
     "rollup-plugin-url": "^2.2.0",
-    "typescript": "^3.3.3333"
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.2"
+  },
+  "jest": {
+    "clearMocks": true,
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ],
+    "modulePaths": [
+      "<rootDir>/src/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!**/node_modules/**",
+      "!**/lib/**",
+      "!**/__tests__/**"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json",
+        "diagnostics": {
+          "pathRegex": "/.(spec|test).ts$/"
+        }
+      }
+    }
   },
   "files": [
     "dist"

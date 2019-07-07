@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import debounce from 'lodash.debounce'
 
 import cache, { onAllLoad } from './utils/cache'
-import debounce from './utils/debounce'
 import getLink from './utils/get-link'
 import getScriptMap from './utils/get-script-map'
 import MapContext, { HEREMapContext } from './utils/map-context'

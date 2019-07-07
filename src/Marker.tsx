@@ -33,7 +33,9 @@ export class Marker extends React.Component<MarkerProps> {
 
     if (this.marker) {
       Object.entries(markerEvents).forEach(([event, hereEvent]) => {
+        // @ts-ignore
         if (typeof this.props[event] === 'function') {
+          // @ts-ignore
           this.marker!.addEventListener(hereEvent, this.props[event])
         }
       })
@@ -54,7 +56,9 @@ export class Marker extends React.Component<MarkerProps> {
 
     if (this.marker) {
       Object.entries(markerEvents).forEach(([event, hereEvent]) => {
+        // @ts-ignore
         if (typeof this.props[event] === 'function') {
+          // @ts-ignore
           this.marker!.removeEventListener(hereEvent, this.props[event])
         }
       })
