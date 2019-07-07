@@ -1,3 +1,11 @@
+# 0.1.3 (July 07, 2019)
+
+Fixes issues with context API when map instance was not already defined.
+
+- [#8](https://github.com/ordazgustavo/here-maps-react/pull/10) fix:
+  conditionally show children.
+  ([@ordazsgustavo](https://github.com/ordazsgustavo))
+
 # 0.1.1 (February 19, 2019)
 
 Add drag events feature support for Marker component.
