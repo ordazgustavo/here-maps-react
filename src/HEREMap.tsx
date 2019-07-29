@@ -8,6 +8,21 @@ import getScriptMap from './utils/get-script-map'
 import MapContext, { HEREMapContext } from './utils/map-context'
 import getPlatform from './utils/get-platform'
 
+const mapEvents = {
+  onPointerDown: 'pointerdown',
+  onPointerUp: 'pointerup',
+  onPointerMove: 'pointermove',
+  onPointerEnter: 'pointerenter',
+  onPointerLeave: 'pointerleave',
+  onPointerCancel: 'pointercancel',
+  onDragStart: 'dragstart',
+  onDrag: 'drag',
+  onDragEnd: 'dragend',
+  onTap: 'tap',
+  onDoubleTap: 'dbltap',
+  onLongPress: 'onLongPress',
+}
+
 export interface HEREMapProps extends H.Map.Options {
   appId: string
   appCode: string
@@ -27,6 +42,18 @@ export interface HEREMapProps extends H.Map.Options {
       | 'labels'
     mapType: 'normal' | 'satelite' | 'terrain'
   }
+  onPointerDown?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onPointerUp?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onPointerMove?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onPointerEnter?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onPointerLeave?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onPointerCancel?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onDragStart?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onDrag?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onDragEnd?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onTap?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onDoubleTap?: (e: H.util.Event, coords: H.geo.IPoint) => void
+  onLongPress?: (e: H.util.Event, coords: H.geo.IPoint) => void
 }
 
 export interface OwnState {}
@@ -124,6 +151,17 @@ export class HEREMap extends React.Component<HEREMapProps, HEREMapContext> {
         center: center,
         pixelRatio: hidpi ? 2 : 1,
         zoom: zoom,
+      })
+      Object.entries(mapEvents).forEach(([event, hereEvent]) => {
+        if (typeof this.props[event] === 'function') {
+          HERE.map!.addEventListener(hereEvent, (e: any) => {
+            const coords = HERE.map!.screenToGeo(
+              e.currentPointer.viewportX,
+              e.currentPointer.viewportY,
+            )
+            this.props[event](e, coords)
+          })
+        }
       })
       if (interactive) {
         HERE.behavior = new H.mapevents.Behavior(

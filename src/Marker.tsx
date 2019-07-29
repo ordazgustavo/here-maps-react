@@ -10,6 +10,7 @@ const markerEvents = {
   onDragStart: 'dragstart',
   onDrag: 'drag',
   onDragEnd: 'dragend',
+  onTap: 'tap',
 }
 
 export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
@@ -18,6 +19,7 @@ export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
   onDragStart?: (e: H.util.Event) => void
   onDrag?: (e: H.util.Event) => void
   onDragEnd?: (e: H.util.Event) => void
+  onTap?: (e: H.util.Event) => void
 }
 
 export class Marker extends React.Component<MarkerProps> {
