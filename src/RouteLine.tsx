@@ -4,7 +4,7 @@ import MapContext from './utils/map-context';
 
 type Shape = string[];
 
-export interface RouteLineProps extends H.map.Polyline.Options, H.geo.IPoint {
+export interface RouteLineProps extends H.map.Polyline.Options {
   strokeColor?: string;
   lineWidth?: number;
   shape: Shape;

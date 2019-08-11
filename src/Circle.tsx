@@ -23,7 +23,7 @@ export const Circle: React.FC<CircleProps> = ({
   React.useEffect(() => {
     const { map } = mapContext;
 
-    if (map) {
+    if (map && !circle) {
       const newCircle = new H.map.Circle(
         {
           lat,

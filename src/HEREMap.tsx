@@ -146,7 +146,11 @@ export const HEREMap: React.FC<HEREMapProps> = ({
 
   return (
     <MapContext.Provider value={{ map, behavior, ui }}>
-      <div id="map-container" style={{ height: '100%' }}>
+      <div
+        id="map-container"
+        data-testid="map-container"
+        style={{ height: '100%' }}
+      >
         {map ? children : null}
       </div>
     </MapContext.Provider>
