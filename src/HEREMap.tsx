@@ -5,6 +5,8 @@ import debounce from 'lodash.debounce';
 import MapContext from './utils/map-context';
 import { HEvents, events, Events } from './utils/map-events';
 import { usePlatform } from './hooks/use-platform';
+import { useScript } from 'hooks/use-script';
+import { useLink } from 'hooks/use-link';
 
 export interface HEREMapProps extends H.Map.Options, HEvents {
   appId: string;
@@ -38,11 +40,34 @@ export const HEREMap: React.FC<HEREMapProps> = ({
   const [behavior, setBehavior] = React.useState<H.mapevents.Behavior>();
   const [ui, setUi] = React.useState<H.ui.UI>();
   const debouncedResizeMap = debounce(resizeMap, 200);
-  const platform = usePlatform({
-    app_code: appCode,
-    app_id: appId,
-    useHTTPS: secure === true,
-  });
+  const [,] = useLink(
+    'https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1526040296',
+    'map-styles',
+  );
+  const [coreLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-core.js',
+    'core',
+  );
+  const [serviceLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-service.js',
+    'service',
+  );
+  const [uiLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-ui.js',
+    'ui',
+  );
+  const [mapeventsLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-mapevents.js',
+    'mapevents',
+  );
+  const platform = usePlatform(
+    {
+      app_code: appCode,
+      app_id: appId,
+      useHTTPS: secure === true,
+    },
+    coreLoaded && serviceLoaded && uiLoaded && mapeventsLoaded,
+  );
 
   React.useEffect(() => {
     if (platform) {
