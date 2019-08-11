@@ -5,8 +5,8 @@ import debounce from 'lodash.debounce';
 import MapContext from './utils/map-context';
 import { HEvents, events, Events } from './utils/map-events';
 import { usePlatform } from './hooks/use-platform';
-import { useScript } from 'hooks/use-script';
-import { useLink } from 'hooks/use-link';
+import { useScript } from './hooks/use-script';
+import { useLink } from './hooks/use-link';
 
 export interface HEREMapProps extends H.Map.Options, HEvents {
   appId: string;
@@ -36,9 +36,11 @@ export const HEREMap: React.FC<HEREMapProps> = ({
   children,
   ...rest
 }) => {
-  const [map, setMap] = React.useState<H.Map>();
-  const [behavior, setBehavior] = React.useState<H.mapevents.Behavior>();
-  const [ui, setUi] = React.useState<H.ui.UI>();
+  const [map, setMap] = React.useState<H.Map | undefined>(undefined);
+  const [behavior, setBehavior] = React.useState<
+    H.mapevents.Behavior | undefined
+  >(undefined);
+  const [ui, setUi] = React.useState<H.ui.UI | undefined>(undefined);
   const debouncedResizeMap = debounce(resizeMap, 200);
   const [,] = useLink(
     'https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1526040296',

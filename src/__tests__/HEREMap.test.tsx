@@ -1,9 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import HEREMap from 'HEREMap';
-import Marker from 'Marker';
-import RouteLine from 'RouteLine';
-import Circle from 'Circle';
+
+import HEREMap from '../HEREMap';
+import Marker from '../Marker';
+import RouteLine from '../RouteLine';
+import Circle from '../Circle';
 
 const appId = '';
 const appCode = '';

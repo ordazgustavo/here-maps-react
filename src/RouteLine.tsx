@@ -16,7 +16,9 @@ export const RouteLine: React.FC<RouteLineProps> = ({
   lineWidth,
 }) => {
   const mapContext = React.useContext(MapContext);
-  const [routeLine, setRouteLine] = React.useState<H.map.Polyline>();
+  const [routeLine, setRouteLine] = React.useState<H.map.Polyline | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
     const { map } = mapContext;

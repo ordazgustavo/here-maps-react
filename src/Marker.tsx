@@ -24,7 +24,9 @@ export const Marker: React.FC<MarkerProps> = ({
   ...rest
 }) => {
   const mapContext = React.useContext(MapContext);
-  const [marker, setMarker] = React.useState<H.map.Marker | H.map.DomMarker>();
+  const [marker, setMarker] = React.useState<
+    H.map.Marker | H.map.DomMarker | undefined
+  >(undefined);
 
   React.useEffect(() => {
     const { map, behavior } = mapContext;
