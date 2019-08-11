@@ -4,10 +4,7 @@
  * @param map
  * @param behavior
  */
-export function setMarkerDragEvent(
-  map: H.Map,
-  behavior: H.mapevents.Behavior,
-) {
+export function setMarkerDragEvent(map: H.Map, behavior: H.mapevents.Behavior) {
   map.addEventListener(
     'dragstart',
     (e: H.util.Event) => {
@@ -15,11 +12,11 @@ export function setMarkerDragEvent(
         e.target instanceof H.map.Marker ||
         e.target instanceof H.map.DomMarker
       ) {
-        behavior.disable()
+        behavior.disable();
       }
     },
     false,
-  )
+  );
 
   map.addEventListener(
     'dragend',
@@ -28,26 +25,26 @@ export function setMarkerDragEvent(
         e.target instanceof H.map.Marker ||
         e.target instanceof H.map.DomMarker
       ) {
-        behavior.enable()
+        behavior.enable();
       }
     },
     false,
-  )
+  );
 
   map.addEventListener(
     'drag',
     (e: any) => {
-      const target = e.target
-      const pointer = e.currentPointer
+      const target = e.target;
+      const pointer = e.currentPointer;
       if (
         target instanceof H.map.Marker ||
         e.target instanceof H.map.DomMarker
       ) {
         target.setPosition(
           map.screenToGeo(pointer.viewportX, pointer.viewportY),
-        )
+        );
       }
     },
     false,
-  )
+  );
 }

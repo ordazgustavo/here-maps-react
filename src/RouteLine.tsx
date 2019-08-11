@@ -1,79 +1,51 @@
-import React from 'react'
+import React from 'react';
 
-import MapContext, { HEREMapContext } from './utils/map-context'
+import MapContext from './utils/map-context';
 
-type Shape = string[]
+type Shape = string[];
 
 export interface RouteLineProps extends H.map.Polyline.Options, H.geo.IPoint {
-  strokeColor?: string
-  lineWidth?: number
-  shape: Shape
+  strokeColor?: string;
+  lineWidth?: number;
+  shape: Shape;
 }
 
-class RouteLine extends React.Component<RouteLineProps> {
-  public static contextType = MapContext
-  public context!: HEREMapContext
-  private routeLine?: H.map.Polyline
+export const RouteLine: React.FC<RouteLineProps> = ({
+  shape,
+  strokeColor,
+  lineWidth,
+}) => {
+  const mapContext = React.useContext(MapContext);
+  const [routeLine, setRouteLine] = React.useState<H.map.Polyline>();
 
-  public componentDidUpdate(prevProps: RouteLineProps) {
-    const { shape } = this.props
-    if (this.didShapeChange(prevProps.shape, shape)) {
-      this.addRouteLineToMap()
-    }
-  }
-
-  public componentWillUnmount() {
-    const { map } = this.context
-
-    if (map && this.routeLine) {
-      map.removeObject(this.routeLine)
-    }
-  }
-
-  private didShapeChange = (prevShape: Shape, nextShape: Shape) => {
-    const diff = nextShape.filter((coord, i) => {
-      if (coord && prevShape && prevShape[i]) {
-        return coord !== prevShape[i]
-      }
-      return true
-    })
-    return Boolean(diff.length)
-  }
-
-  private addRouteLineToMap() {
-    const { map } = this.context
-
-    const { shape, strokeColor, lineWidth } = this.props
-
-    const linestring = new H.geo.LineString()
-    shape.forEach(point => {
-      const [lat, lng] = point.split(',')
-      linestring.pushLatLngAlt(Number(lat), Number(lng), 1)
-    })
-
-    const routeLine = new H.map.Polyline(linestring, {
-      style: { strokeColor, lineWidth },
-    })
-
+  React.useEffect(() => {
+    const { map } = mapContext;
     if (map) {
-      if (this.routeLine) {
-        map.removeObject(this.routeLine)
+      const linestring = new H.geo.LineString();
+      shape.forEach(point => {
+        const [lat, lng] = point.split(',');
+        linestring.pushLatLngAlt(Number(lat), Number(lng), 1);
+      });
+
+      const newRouteLine = new H.map.Polyline(linestring, {
+        style: { strokeColor, lineWidth },
+      });
+
+      if (routeLine) {
+        map.removeObject(routeLine);
       }
-      map.addObject(routeLine)
+      map.addObject(newRouteLine);
 
-      this.routeLine = routeLine
+      setRouteLine(routeLine);
     }
-  }
+    return () => {
+      if (map && routeLine) {
+        map.removeObject(routeLine);
+      }
+    };
+  }, [lineWidth, mapContext, routeLine, shape, strokeColor]);
 
-  public render() {
-    const { map } = this.context
+  return null;
+};
 
-    if (map && !this.routeLine) {
-      this.addRouteLineToMap()
-    }
-
-    return null
-  }
-}
-
-export default RouteLine
+export default RouteLine;

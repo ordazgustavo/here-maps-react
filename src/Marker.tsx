@@ -1,114 +1,96 @@
-import React from 'react'
-import ReactDOMServer from 'react-dom/server'
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 
-import getDomMarkerIcon from './utils/get-dom-marker-icon'
-import getMarkerIcon from './utils/get-marker-icon'
-import MapContext, { HEREMapContext } from './utils/map-context'
-import { setMarkerDragEvent } from './utils/set-drag-event'
+import getDomMarkerIcon from './utils/get-dom-marker-icon';
+import getMarkerIcon from './utils/get-marker-icon';
+import MapContext from './utils/map-context';
+import { setMarkerDragEvent } from './utils/set-drag-event';
+import { HEvents, events, Events } from './utils/map-events';
 
-const markerEvents = {
-  onDragStart: 'dragstart',
-  onDrag: 'drag',
-  onDragEnd: 'dragend',
+export interface MarkerProps
+  extends H.map.Marker.Options,
+    H.geo.IPoint,
+    HEvents {
+  bitmap?: string;
+  draggable?: boolean;
 }
 
-export interface MarkerProps extends H.map.Marker.Options, H.geo.IPoint {
-  bitmap?: string
-  draggable?: boolean
-  onDragStart?: (e: H.util.Event) => void
-  onDrag?: (e: H.util.Event) => void
-  onDragEnd?: (e: H.util.Event) => void
-}
+export const Marker: React.FC<MarkerProps> = ({
+  children,
+  bitmap,
+  lat,
+  lng,
+  draggable,
+  ...rest
+}) => {
+  const mapContext = React.useContext(MapContext);
+  const [marker, setMarker] = React.useState<H.map.Marker | H.map.DomMarker>();
 
-export class Marker extends React.Component<MarkerProps> {
-  public static contextType = MapContext
-  public context!: HEREMapContext
-  private marker?: H.map.DomMarker | H.map.Marker
+  React.useEffect(() => {
+    const { map, behavior } = mapContext;
 
-  public componentDidMount() {
-    const { map } = this.context
-    if (map && !this.marker) {
-      this.addMarkerToMap()
-    }
-
-    if (this.marker) {
-      Object.entries(markerEvents).forEach(([event, hereEvent]) => {
-        // @ts-ignore
-        if (typeof this.props[event] === 'function') {
-          // @ts-ignore
-          this.marker!.addEventListener(hereEvent, this.props[event])
-        }
-      })
-    }
-  }
-
-  public componentDidUpdate(prevProps: MarkerProps) {
-    if (prevProps.lat !== this.props.lat || prevProps.lng !== this.props.lng) {
-      this.setPosition({
-        lat: this.props.lat,
-        lng: this.props.lng,
-      })
-    }
-  }
-
-  public componentWillUnmount() {
-    const { map } = this.context
-
-    if (this.marker) {
-      Object.entries(markerEvents).forEach(([event, hereEvent]) => {
-        // @ts-ignore
-        if (typeof this.props[event] === 'function') {
-          // @ts-ignore
-          this.marker!.removeEventListener(hereEvent, this.props[event])
-        }
-      })
-    }
-
-    if (map && this.marker) {
-      map.removeObject(this.marker)
-    }
-  }
-
-  private addMarkerToMap() {
-    const { map, behavior } = this.context
-    const { children, bitmap, lat, lng, draggable } = this.props
-
-    let marker: H.map.DomMarker | H.map.Marker
-    if (map) {
+    if (map && !marker) {
+      let newMarker: H.map.DomMarker | H.map.Marker;
       if (React.Children.count(children) > 0) {
         const html = ReactDOMServer.renderToStaticMarkup(
           <div className="dom-marker">{children}</div>,
-        )
-        const icon = getDomMarkerIcon(html)
-        marker = new H.map.DomMarker({ lat, lng }, { icon })
+        );
+        const icon = getDomMarkerIcon(html);
+        newMarker = new H.map.DomMarker({ lat, lng }, { icon });
       } else if (bitmap) {
-        const icon = getMarkerIcon(bitmap)
+        const icon = getMarkerIcon(bitmap);
 
-        marker = new H.map.Marker({ lat, lng }, { icon })
+        newMarker = new H.map.Marker({ lat, lng }, { icon });
       } else {
-        marker = new H.map.Marker({ lat, lng })
+        newMarker = new H.map.Marker({ lat, lng });
       }
 
       if (draggable && behavior) {
-        marker.draggable = draggable
-        setMarkerDragEvent(map, behavior)
+        newMarker.draggable = draggable;
+        setMarkerDragEvent(map, behavior);
       }
 
-      map.addObject(marker)
-      this.marker = marker
+      map.addObject(newMarker);
+      setMarker(newMarker);
     }
-    return null
-  }
+    return () => {
+      if (map && marker) {
+        map.removeObject(marker);
+      }
+    };
+  }, [bitmap, children, draggable, lat, lng, mapContext, marker]);
 
-  private setPosition(point: H.geo.IPoint): void {
-    if (this.marker) {
-      this.marker.setPosition(point)
+  React.useEffect(() => {
+    if (marker) {
+      Object.entries(events).forEach(([event, hereEvent]) => {
+        const e = rest[event as keyof Events];
+        if (typeof e === 'function') {
+          marker.addEventListener(hereEvent, e);
+        }
+      });
     }
-  }
+    return () => {
+      if (marker) {
+        Object.entries(events).forEach(([event, hereEvent]) => {
+          const e = rest[event as keyof Events];
+          if (typeof e === 'function') {
+            marker.removeEventListener(hereEvent, e);
+          }
+        });
+      }
+    };
+  }, [marker, rest]);
 
-  public render() {
-    return null
-  }
-}
+  React.useEffect(() => {
+    if (marker && lat && lng) {
+      marker.setPosition({
+        lat,
+        lng,
+      });
+    }
+  }, [lat, lng, marker]);
 
-export default Marker
+  return null;
+};
+
+export default Marker;

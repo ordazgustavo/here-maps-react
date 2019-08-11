@@ -1,7 +1,7 @@
 /**
  * Map for image URL strings against H.map.Icon instances
  */
-export const Icons: Map<string, H.map.Icon> = new Map()
+export const Icons: Map<string, H.map.Icon> = new Map();
 
 /**
  * Returns the Icon for the input bitmap URL string, ensuring that no more
@@ -10,9 +10,9 @@ export const Icons: Map<string, H.map.Icon> = new Map()
  */
 export default function getMarkerIcon(bitmap: string): H.map.Icon | undefined {
   if (!Icons.has(bitmap)) {
-    const icon = new H.map.Icon(bitmap)
-    Icons.set(bitmap, icon)
+    const icon = new H.map.Icon(bitmap);
+    Icons.set(bitmap, icon);
   }
 
-  return Icons.get(bitmap)
+  return Icons.get(bitmap);
 }

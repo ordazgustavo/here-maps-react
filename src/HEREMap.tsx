@@ -1,185 +1,156 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import debounce from 'lodash.debounce'
+/* eslint @typescript-eslint/camelcase: 0 */
+import React from 'react';
+import debounce from 'lodash.debounce';
 
-import cache, { onAllLoad } from './utils/cache'
-import getLink from './utils/get-link'
-import getScriptMap from './utils/get-script-map'
-import MapContext, { HEREMapContext } from './utils/map-context'
-import getPlatform from './utils/get-platform'
+import MapContext from './utils/map-context';
+import { HEvents, events, Events } from './utils/map-events';
+import { usePlatform } from './hooks/use-platform';
 
-export interface HEREMapProps extends H.Map.Options {
-  appId: string
-  appCode: string
-  animateCenter?: boolean
-  animateZoom?: boolean
-  hidpi?: boolean
-  interactive?: boolean
-  secure?: boolean
+export interface HEREMapProps extends H.Map.Options, HEvents {
+  appId: string;
+  appCode: string;
+  animateCenter?: boolean;
+  animateZoom?: boolean;
+  hidpi?: boolean;
+  interactive?: boolean;
+  secure?: boolean;
   setLayer?: {
-    layer:
-      | 'map'
-      | 'traffic'
-      | 'panorama'
-      | 'transit'
-      | 'xbase'
-      | 'base'
-      | 'labels'
-    mapType: 'normal' | 'satelite' | 'terrain'
-  }
+    layer: keyof H.service.MapType;
+    mapType: keyof H.service.DefaultLayers;
+  };
 }
 
-export interface OwnState {}
+export const HEREMap: React.FC<HEREMapProps> = ({
+  animateCenter,
+  animateZoom,
+  appId,
+  appCode,
+  center,
+  hidpi,
+  interactive,
+  secure,
+  zoom,
+  setLayer,
+  children,
+  ...rest
+}) => {
+  const [map, setMap] = React.useState<H.Map>();
+  const [behavior, setBehavior] = React.useState<H.mapevents.Behavior>();
+  const [ui, setUi] = React.useState<H.ui.UI>();
+  const debouncedResizeMap = debounce(resizeMap, 200);
+  const platform = usePlatform({
+    app_code: appCode,
+    app_id: appId,
+    useHTTPS: secure === true,
+  });
 
-export class HEREMap extends React.Component<HEREMapProps, HEREMapContext> {
-  private debouncedResizeMap: any
-  // public static contextType = MapContext
+  React.useEffect(() => {
+    if (platform) {
+      const defaultLayers = platform.createDefaultLayers({
+        ppi: hidpi ? 320 : 72,
+      });
 
-  constructor(props: HEREMapProps) {
-    super(props)
+      const mapElement = document.querySelector('#map-container');
 
-    this.state = {
-      map: undefined,
-      behavior: undefined,
-      ui: undefined,
-    }
+      let customLayer: H.map.layer.Layer | undefined;
+      if (setLayer && setLayer.mapType && setLayer.layer) {
+        const { mapType, layer } = setLayer;
+        if (mapType === 'incidents' || mapType === 'venues') {
+          customLayer = defaultLayers[mapType];
+        } else {
+          customLayer = defaultLayers[mapType][layer];
+        }
+      }
 
-    this.debouncedResizeMap = debounce(this.resizeMap, 200)
-  }
+      if (mapElement && !map) {
+        const newMap = new H.Map(
+          mapElement,
+          customLayer || defaultLayers.normal.map,
+          {
+            center,
+            zoom,
+            pixelRatio: hidpi ? 2 : 1,
+          },
+        );
+        setMap(newMap);
+        if (interactive) {
+          const newBehavior = new H.mapevents.Behavior(
+            new H.mapevents.MapEvents(newMap),
+          );
 
-  public componentDidMount() {
-    const { secure } = this.props
+          const newUi = H.ui.UI.createDefault(newMap, defaultLayers);
+          setBehavior(newBehavior);
+          setUi(newUi);
+        }
+      }
 
-    cache(getScriptMap(secure === true))
-    const stylesheetUrl = `${
-      secure === true ? 'https:' : ''
-    }//js.api.here.com/v3/3.0/mapsjs-ui.css`
-    getLink(stylesheetUrl, 'HERE Maps UI')
-
-    onAllLoad(() => {
-      const map = this.createMap()
-
-      window.addEventListener('resize', this.debouncedResizeMap)
-
-      this.setState({ ...map })
-    })
-  }
-
-  public componentDidUpdate(prevProps: HEREMapProps) {
-    if (
-      prevProps.center &&
-      this.props.center &&
-      (prevProps.center.lat !== this.props.center.lat ||
-        prevProps.center.lng !== this.props.center.lng)
-    ) {
-      this.setCenter(this.props.center)
-    }
-
-    if (
-      prevProps.zoom &&
-      this.props.zoom &&
-      prevProps.zoom !== this.props.zoom
-    ) {
-      this.setZoom(this.props.zoom)
-    }
-  }
-
-  public componentWillUnmount() {
-    window.removeEventListener('resize', this.debouncedResizeMap)
-  }
-
-  public createMap = (): HEREMapContext => {
-    const {
-      appId,
-      appCode,
-      center,
-      hidpi,
-      interactive,
-      zoom,
-      secure,
-      setLayer,
-    } = this.props
-
-    const platform = getPlatform({
-      app_code: appCode,
-      app_id: appId,
-      useHTTPS: secure === true,
-    })
-
-    const defaultLayers = platform.createDefaultLayers({
-      ppi: hidpi ? 320 : 72,
-    })
-
-    const mapElement = document.querySelector('.map-container')
-
-    const HERE: HEREMapContext = {}
-
-    let layer = defaultLayers.normal.map
-    if (setLayer) {
-      layer = defaultLayers[setLayer.mapType][setLayer.layer]
-    }
-
-    if (mapElement) {
-      HERE.map = new H.Map(mapElement, layer, {
-        center: center,
-        pixelRatio: hidpi ? 2 : 1,
-        zoom: zoom,
-      })
-      if (interactive) {
-        HERE.behavior = new H.mapevents.Behavior(
-          new H.mapevents.MapEvents(HERE.map),
-        )
-
-        HERE.ui = H.ui.UI.createDefault(HERE.map, defaultLayers)
+      if (typeof window !== 'undefined') {
+        window.addEventListener('resize', debouncedResizeMap);
       }
     }
 
-    return HERE
-  }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', debouncedResizeMap);
+      }
+    };
+  }, [
+    center,
+    debouncedResizeMap,
+    hidpi,
+    interactive,
+    map,
+    platform,
+    setLayer,
+    zoom,
+  ]);
 
-  public getElement(): Element | Text | null {
-    return ReactDOM.findDOMNode(this)
-  }
-
-  public setCenter(point: H.geo.IPoint): void {
-    const { animateCenter } = this.props
-    const { map } = this.state
+  React.useEffect(() => {
     if (map) {
-      map.setCenter(point, animateCenter === true)
+      Object.entries(events).forEach(([event, hereEvent]) => {
+        const e = rest[event as keyof Events];
+        if (typeof e === 'function') {
+          map.addEventListener(hereEvent, e);
+        }
+      });
+    }
+    return () => {
+      if (map) {
+        Object.entries(events).forEach(([event, hereEvent]) => {
+          const e = rest[event as keyof Events];
+          if (typeof e === 'function') {
+            map.removeEventListener(hereEvent, e);
+          }
+        });
+      }
+    };
+  }, [map, rest]);
+
+  React.useEffect(() => {
+    if (map && center) {
+      map.setCenter(center, animateCenter === true);
+    }
+  }, [animateCenter, center, map]);
+
+  React.useEffect(() => {
+    if (map && zoom) {
+      map.setZoom(zoom, animateZoom === true);
+    }
+  }, [animateZoom, map, zoom]);
+
+  function resizeMap() {
+    if (map) {
+      map.getViewPort().resize();
     }
   }
 
-  public setZoom(zoom: number): void {
-    const { animateZoom } = this.props
-    const { map } = this.state
-    if (map) {
-      map.setZoom(zoom, animateZoom === true)
-    }
-  }
+  return (
+    <MapContext.Provider value={{ map, behavior, ui }}>
+      <div id="map-container" style={{ height: '100%' }}>
+        {map ? children : null}
+      </div>
+    </MapContext.Provider>
+  );
+};
 
-  private resizeMap = () => {
-    const { map } = this.state
-    if (map) {
-      map.getViewPort().resize()
-    }
-  }
-
-  public render() {
-    const { map } = this.state
-    const { children } = this.props
-
-    return (
-      <MapContext.Provider value={this.state}>
-        <div
-          className="map-container"
-          id={`map-container`}
-          style={{ height: '100%' }}
-        >
-          {map ? children : null}
-        </div>
-      </MapContext.Provider>
-    )
-  }
-}
-
-export default HEREMap
+export default HEREMap;
