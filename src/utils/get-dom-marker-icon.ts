@@ -1,7 +1,7 @@
 /**
  * Map for HTML strings against H.map.DomIcon instances
  */
-export const DomIcons: Map<string, H.map.DomIcon> = new Map()
+export const DomIcons: Map<string, H.map.DomIcon> = new Map();
 
 /**
  * Returns the DOM Icon for the input HTML string, ensuring that no more
@@ -12,9 +12,9 @@ export default function getDomMarkerIcon(
   html: string,
 ): H.map.DomIcon | undefined {
   if (!DomIcons.has(html)) {
-    const icon = new H.map.DomIcon(html)
-    DomIcons.set(html, icon)
+    const icon = new H.map.DomIcon(html);
+    DomIcons.set(html, icon);
   }
 
-  return DomIcons.get(html)
+  return DomIcons.get(html);
 }

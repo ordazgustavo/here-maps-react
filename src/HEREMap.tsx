@@ -1,185 +1,187 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+/* eslint @typescript-eslint/camelcase: 0 */
+import React from 'react';
+import debounce from 'lodash.debounce';
 
-import cache, { onAllLoad } from './utils/cache'
-import debounce from './utils/debounce'
-import getLink from './utils/get-link'
-import getScriptMap from './utils/get-script-map'
-import MapContext, { HEREMapContext } from './utils/map-context'
-import getPlatform from './utils/get-platform'
+import MapContext from './utils/map-context';
+import { HEvents, events, Events } from './utils/map-events';
+import { usePlatform } from './hooks/use-platform';
+import { useScript } from './hooks/use-script';
+import { useLink } from './hooks/use-link';
 
-export interface HEREMapProps extends H.Map.Options {
-  appId: string
-  appCode: string
-  animateCenter?: boolean
-  animateZoom?: boolean
-  hidpi?: boolean
-  interactive?: boolean
-  secure?: boolean
+export interface HEREMapProps extends H.Map.Options, HEvents {
+  appId: string;
+  appCode: string;
+  animateCenter?: boolean;
+  animateZoom?: boolean;
+  hidpi?: boolean;
+  interactive?: boolean;
+  secure?: boolean;
   setLayer?: {
-    layer:
-      | 'map'
-      | 'traffic'
-      | 'panorama'
-      | 'transit'
-      | 'xbase'
-      | 'base'
-      | 'labels'
-    mapType: 'normal' | 'satelite' | 'terrain'
-  }
+    layer: keyof H.service.MapType;
+    mapType: keyof H.service.DefaultLayers;
+  };
 }
 
-export interface OwnState {}
-
-export class HEREMap extends React.Component<HEREMapProps, HEREMapContext> {
-  private debouncedResizeMap: any
-  // public static contextType = MapContext
-
-  constructor(props: HEREMapProps) {
-    super(props)
-
-    this.state = {
-      map: undefined,
-      behavior: undefined,
-      ui: undefined,
-    }
-
-    this.debouncedResizeMap = debounce(this.resizeMap, 200)
-  }
-
-  public componentDidMount() {
-    const { secure } = this.props
-
-    cache(getScriptMap(secure === true))
-    const stylesheetUrl = `${
-      secure === true ? 'https:' : ''
-    }//js.api.here.com/v3/3.0/mapsjs-ui.css`
-    getLink(stylesheetUrl, 'HERE Maps UI')
-
-    onAllLoad(() => {
-      const map = this.createMap()
-
-      window.addEventListener('resize', this.debouncedResizeMap)
-
-      this.setState({ ...map })
-    })
-  }
-
-  public componentDidUpdate(prevProps: HEREMapProps) {
-    if (
-      prevProps.center &&
-      this.props.center &&
-      (prevProps.center.lat !== this.props.center.lat ||
-        prevProps.center.lng !== this.props.center.lng)
-    ) {
-      this.setCenter(this.props.center)
-    }
-
-    if (
-      prevProps.zoom &&
-      this.props.zoom &&
-      prevProps.zoom !== this.props.zoom
-    ) {
-      this.setZoom(this.props.zoom)
-    }
-  }
-
-  public componentWillUnmount() {
-    window.removeEventListener('resize', this.debouncedResizeMap)
-  }
-
-  public createMap = (): HEREMapContext => {
-    const {
-      appId,
-      appCode,
-      center,
-      hidpi,
-      interactive,
-      zoom,
-      secure,
-      setLayer,
-    } = this.props
-
-    const platform = getPlatform({
+export const HEREMap: React.FC<HEREMapProps> = ({
+  animateCenter,
+  animateZoom,
+  appId,
+  appCode,
+  center,
+  hidpi,
+  interactive,
+  secure,
+  zoom,
+  setLayer,
+  children,
+  ...rest
+}) => {
+  const [map, setMap] = React.useState<H.Map | undefined>(undefined);
+  const [behavior, setBehavior] = React.useState<
+    H.mapevents.Behavior | undefined
+  >(undefined);
+  const [ui, setUi] = React.useState<H.ui.UI | undefined>(undefined);
+  const debouncedResizeMap = debounce(resizeMap, 200);
+  const [,] = useLink(
+    'https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1526040296',
+    'map-styles',
+  );
+  const [coreLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-core.js',
+    'core',
+  );
+  const [serviceLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-service.js',
+    'service',
+  );
+  const [uiLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-ui.js',
+    'ui',
+  );
+  const [mapeventsLoaded] = useScript(
+    'https://js.api.here.com/v3/3.0/mapsjs-mapevents.js',
+    'mapevents',
+  );
+  const platform = usePlatform(
+    {
       app_code: appCode,
       app_id: appId,
       useHTTPS: secure === true,
-    })
+    },
+    coreLoaded && serviceLoaded && uiLoaded && mapeventsLoaded,
+  );
 
-    const defaultLayers = platform.createDefaultLayers({
-      ppi: hidpi ? 320 : 72,
-    })
+  React.useEffect(() => {
+    if (platform) {
+      const defaultLayers = platform.createDefaultLayers({
+        ppi: hidpi ? 320 : 72,
+      });
 
-    const mapElement = document.querySelector('.map-container')
+      const mapElement = document.querySelector('#map-container');
 
-    const HERE: HEREMapContext = {}
+      let customLayer: H.map.layer.Layer | undefined;
+      if (setLayer && setLayer.mapType && setLayer.layer) {
+        const { mapType, layer } = setLayer;
+        if (mapType === 'incidents' || mapType === 'venues') {
+          customLayer = defaultLayers[mapType];
+        } else {
+          customLayer = defaultLayers[mapType][layer];
+        }
+      }
 
-    let layer = defaultLayers.normal.map
-    if (setLayer) {
-      layer = defaultLayers[setLayer.mapType][setLayer.layer]
-    }
+      if (mapElement && !map) {
+        const newMap = new H.Map(
+          mapElement,
+          customLayer || defaultLayers.normal.map,
+          {
+            center,
+            zoom,
+            pixelRatio: hidpi ? 2 : 1,
+          },
+        );
+        setMap(newMap);
+        if (interactive) {
+          const newBehavior = new H.mapevents.Behavior(
+            new H.mapevents.MapEvents(newMap),
+          );
 
-    if (mapElement) {
-      HERE.map = new H.Map(mapElement, layer, {
-        center: center,
-        pixelRatio: hidpi ? 2 : 1,
-        zoom: zoom,
-      })
-      if (interactive) {
-        HERE.behavior = new H.mapevents.Behavior(
-          new H.mapevents.MapEvents(HERE.map),
-        )
+          const newUi = H.ui.UI.createDefault(newMap, defaultLayers);
+          setBehavior(newBehavior);
+          setUi(newUi);
+        }
+      }
 
-        HERE.ui = H.ui.UI.createDefault(HERE.map, defaultLayers)
+      if (typeof window !== 'undefined') {
+        window.addEventListener('resize', debouncedResizeMap);
       }
     }
 
-    return HERE
-  }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', debouncedResizeMap);
+      }
+    };
+  }, [
+    center,
+    debouncedResizeMap,
+    hidpi,
+    interactive,
+    map,
+    platform,
+    setLayer,
+    zoom,
+  ]);
 
-  public getElement(): Element | Text | null {
-    return ReactDOM.findDOMNode(this)
-  }
-
-  public setCenter(point: H.geo.IPoint): void {
-    const { animateCenter } = this.props
-    const { map } = this.state
+  React.useEffect(() => {
     if (map) {
-      map.setCenter(point, animateCenter === true)
+      Object.entries(events).forEach(([event, hereEvent]) => {
+        const e = rest[event as keyof Events];
+        if (typeof e === 'function') {
+          map.addEventListener(hereEvent, e);
+        }
+      });
+    }
+    return () => {
+      if (map) {
+        Object.entries(events).forEach(([event, hereEvent]) => {
+          const e = rest[event as keyof Events];
+          if (typeof e === 'function') {
+            map.removeEventListener(hereEvent, e);
+          }
+        });
+      }
+    };
+  }, [map, rest]);
+
+  React.useEffect(() => {
+    if (map && center) {
+      map.setCenter(center, animateCenter === true);
+    }
+  }, [animateCenter, center, map]);
+
+  React.useEffect(() => {
+    if (map && zoom) {
+      map.setZoom(zoom, animateZoom === true);
+    }
+  }, [animateZoom, map, zoom]);
+
+  function resizeMap() {
+    if (map) {
+      map.getViewPort().resize();
     }
   }
 
-  public setZoom(zoom: number): void {
-    const { animateZoom } = this.props
-    const { map } = this.state
-    if (map) {
-      map.setZoom(zoom, animateZoom === true)
-    }
-  }
+  return (
+    <MapContext.Provider value={{ map, behavior, ui }}>
+      <div
+        id="map-container"
+        data-testid="map-container"
+        style={{ height: '100%' }}
+      >
+        {map ? children : null}
+      </div>
+    </MapContext.Provider>
+  );
+};
 
-  private resizeMap = () => {
-    const { map } = this.state
-    if (map) {
-      map.getViewPort().resize()
-    }
-  }
-
-  public render() {
-    const { map } = this.state
-    const { children } = this.props
-
-    return (
-      <MapContext.Provider value={this.state}>
-        <div
-          className="map-container"
-          id={`map-container`}
-          style={{ height: '100%' }}
-        >
-          {map ? children : null}
-        </div>
-      </MapContext.Provider>
-    )
-  }
-}
-
-export default HEREMap
+export default HEREMap;

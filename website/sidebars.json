@@ -1,0 +1,12 @@
+{
+  "docs": {
+    "Introduction": ["introduction/installation"],
+    "API Reference": [
+      "api/here-map",
+      "api/marker",
+      "api/routeline",
+      "api/circle",
+      "api/use-platform"
+    ]
+  }
+}

@@ -1,3 +1,9 @@
+# 1.0.0-beta.2 (August 11, 2019)
+
+A complete rebuild of this library to use React Hooks internally (and in the
+near future expose some hooks), add features, fix bugs, and the initial version
+of the documentation.
+
 # 0.1.3 (July 07, 2019)
 
 Fixes issues with context API when map instance was not already defined.
@@ -17,8 +23,8 @@ Add drag events feature support for Marker component.
 
 This release is considered a breaking change due to changes in the way the map
 internal container sets it's size. Previously it was set to `100vh` so it would
-allways take the full window height, now it is set to `100%` so it adapts to
-the container size set by the user.
+allways take the full window height, now it is set to `100%` so it adapts to the
+container size set by the user.
 
 - [#1](https://github.com/ordazgustavo/here-maps-react/pull/1) Change vh to
   percent. ([@ordazsgustavo](https://github.com/ordazsgustavo))
