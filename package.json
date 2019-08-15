@@ -18,8 +18,6 @@
     "build": "rollup -c",
     "start": "rollup -c -w",
     "prepare": "npm run build",
-    "predeploy": "cd example && npm install && npm run build",
-    "deploy": "gh-pages -d example/build",
     "format": "prettier --write \"src/**/*.+(js|md|css|json|ts|tsx)\""
   },
   "peerDependencies": {
