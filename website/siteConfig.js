@@ -24,7 +24,7 @@ const siteConfig = {
   title: 'React Here Maps', // Title for your website.
   tagline: 'React components library for HERE Maps',
   url: 'https://ordazgustavo.github.io', // Your website URL
-  baseUrl: '/', // Base URL for your project */
+  baseUrl: '/here-maps-react/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
