@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>&lt;Circle /&gt; · React Here Maps</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="`&lt;Circle /&gt;` is the component used for displaying circle shapes on the map."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="&lt;Circle /&gt; · React Here Maps"/><meta property="og:type" content="website"/><meta property="og:url" content="https://ordazgustavo.github.io/"/><meta property="og:description" content="`&lt;Circle /&gt;` is the component used for displaying circle shapes on the map."/><meta property="og:image" content="https://ordazgustavo.github.io/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://ordazgustavo.github.io/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/logo-white.png" alt="React Here Maps"/><h2 class="headerTitleWithLogo">React Here Maps</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/introduction/installation" target="_self">Docs</a></li><li class="siteNavGroupActive"><a href="/docs/api/here-map" target="_self">API</a></li><li class=""><a href="/help" target="_self">Help</a></li><li class=""><a href="https://github.com/ordazgustavo/here-maps-react" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>API Reference</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/introduction/installation">Installation</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API Reference</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/api/here-map">&lt;HEREMap /&gt;</a></li><li class="navListItem"><a class="navItem" href="/docs/api/marker">&lt;Marker /&gt;</a></li><li class="navListItem"><a class="navItem" href="/docs/api/routeline">&lt;RouteLine /&gt;</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/api/circle">&lt;Circle /&gt;</a></li><li class="navListItem"><a class="navItem" href="/docs/api/use-platform">usePlatform()</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">&lt;Circle /&gt;</h1></header><article><div><span><p><code>&lt;Circle /&gt;</code> is the component used for displaying circle shapes on the map.</p>
+<h2><a class="anchor" aria-hidden="true" id="usage"></a><a href="#usage" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Usage</h2>
+<pre><code class="hljs css language-jsx"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>:
+<span class="hljs-keyword">import</span> { HEREMap, Marker, Circle } <span class="hljs-keyword">from</span> <span class="hljs-string">'here-maps-react'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Map</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> [shape, setShape] = React.useState([]);
+
+  React.useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    ...
+    setShape([...]);
+  });
+
+  <span class="hljs-keyword">return</span> (
+    &lt;HEREMap
+      appId="my_app_id"
+      appCode="my_app_code"
+      center={{ lat: 10.998666, lng: -63.79841 }}
+      zoom={12}
+    &gt;
+      &lt;Marker lat={10.998666} lng={-63.79841} /&gt;
+      &lt;Circle radius={20} lat={10.998666} lng={-63.79841} /&gt;
+     &lt;/HEREMap&gt;
+  );
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="props"></a><a href="#props" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Props</h3>
+<p><strong>Available</strong></p>
+<ul>
+<li><code>lat: H.geo.Latitude;</code></li>
+<li><code>lng: H.geo.Longitude;</code></li>
+<li><code>radius: number;</code></li>
+<li><code>strokeColor?: string;</code></li>
+<li><code>lineWidth?: number;</code></li>
+<li><code>fillColor?: string;</code></li>
+</ul>
+<p><strong>To be implemented</strong></p>
+<ul>
+<li><code>style?: H.map.SpatialStyle | H.map.SpatialStyle.Options;</code></li>
+<li><code>visibility?: boolean;</code></li>
+<li><code>precision?: number;</code></li>
+<li><code>zIndex?: number;</code></li>
+<li><code>min?: number;</code></li>
+<li><code>max?: number;</code></li>
+<li><code>provider?: H.map.provider.Provider;</code></li>
+<li><code>data?: any;</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="reference"></a><a href="#reference" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h3>
+<p>You can find more info about this types
+<a href="https://developer.here.com/documentation/maps/topics_api/h-intro.html">here</a>.</p>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 8/15/2019 by Gustavo Ordaz</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/api/routeline"><span class="arrow-prev">← </span><span class="function-name-prevnext">&lt;RouteLine /&gt;</span></a><a class="docs-next button" href="/docs/api/use-platform"><span class="function-name-prevnext">usePlatform()</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#usage">Usage</a><ul class="toc-headings"><li><a href="#props">Props</a></li><li><a href="#reference">Reference</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/logo.png" alt="React Here Maps" width="66" height="45"/></a><div><h5>Docs</h5><a href="/docs/en/introduction/installation.html">Getting Started</a></div><div><h5>Community</h5><a href="https://twitter.com/ordazsgustavo" target="_blank" rel="noreferrer noopener">Twitter</a></div><div><h5>More</h5><a href="https://github.com/">GitHub</a><a class="github-button" href="https://github.com/ordazgustavo/here-maps-react" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 ordazgustavo</section></footer></div></body></html>
