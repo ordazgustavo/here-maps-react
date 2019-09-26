@@ -1,7 +1,7 @@
 import React from 'react';
 
 export function usePlatform(
-  platformOptions: H.service.Platform.Options,
+  platformOptions: window.H.service.Platform.Options,
   scriptsLoaded = true,
 ) {
   const [platform, setPlatform] = React.useState<
@@ -10,7 +10,7 @@ export function usePlatform(
 
   React.useEffect(() => {
     if (!platform && scriptsLoaded) {
-      setPlatform(new H.service.Platform(platformOptions));
+      setPlatform(new window.H.service.Platform(platformOptions));
     }
   }, [platform, platformOptions, scriptsLoaded]);
 
