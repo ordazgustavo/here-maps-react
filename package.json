@@ -2,7 +2,7 @@
   "name": "here-maps-react",
   "version": "1.0.0",
   "description": "React components library for HERE Maps",
-  "author": "ordazgustavo",
+  "author": "Gustavo Ordaz <ordazgustavo@gmail.com>",
   "license": "MIT",
   "repository": "ordazgustavo/here-maps-react",
   "main": "dist/index.js",
@@ -11,6 +11,13 @@
     "node": ">=8",
     "npm": ">=5"
   },
+  "keywords": [
+    "here",
+    "heremaps",
+    "here-maps-react",
+    "maps",
+    "hooks"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
