@@ -11,6 +11,7 @@ import { useLink } from './hooks/use-link';
 export interface HEREMapProps extends H.Map.Options, HEvents {
   appId: string;
   appCode: string;
+  mapContainerId?: string;
   animateCenter?: boolean;
   animateZoom?: boolean;
   hidpi?: boolean;
@@ -27,6 +28,7 @@ export const HEREMap: React.FC<HEREMapProps> = ({
   animateZoom,
   appId,
   appCode,
+  mapContainerId = 'map-container',
   center,
   hidpi,
   interactive,
@@ -77,7 +79,7 @@ export const HEREMap: React.FC<HEREMapProps> = ({
         ppi: hidpi ? 320 : 72,
       });
 
-      const mapElement = document.querySelector('#map-container');
+      const mapElement = document.querySelector(`#${mapContainerId}`);
 
       let customLayer: H.map.layer.Layer | undefined;
       if (setLayer && setLayer.mapType && setLayer.layer) {
@@ -127,6 +129,7 @@ export const HEREMap: React.FC<HEREMapProps> = ({
     hidpi,
     interactive,
     map,
+    mapContainerId,
     platform,
     setLayer,
     zoom,
@@ -174,7 +177,7 @@ export const HEREMap: React.FC<HEREMapProps> = ({
   return (
     <MapContext.Provider value={{ map, behavior, ui }}>
       <div
-        id="map-container"
+        id={mapContainerId}
         data-testid="map-container"
         style={{ height: '100%' }}
       >
