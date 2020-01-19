@@ -1,3 +1,8 @@
+# 1.1.0 (January 18, 2020)
+
+- [#20](https://github.com/ordazgustavo/here-maps-react/pull/20) feat: add map
+  container id. ([@omhoumz](https://github.com/omhoumz))
+
 # 1.0.0-beta.2 (August 11, 2019)
 
 A complete rebuild of this library to use React Hooks internally (and in the
