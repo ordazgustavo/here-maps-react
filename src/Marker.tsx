@@ -85,7 +85,7 @@ export const Marker: React.FC<MarkerProps> = ({
 
   React.useEffect(() => {
     if (marker && lat && lng) {
-      marker.setPosition({
+      marker.setGeometry({
         lat,
         lng,
       });

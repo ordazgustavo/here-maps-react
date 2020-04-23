@@ -454,10 +454,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/heremaps@^3.0.15":
-  version "3.0.15"
-  resolved "https://registry.yarnpkg.com/@types/heremaps/-/heremaps-3.0.15.tgz#f1d1d0cc1dee14b8fbd90c59fc26c758354d6e4c"
-  integrity sha512-CejtUwzAimVi5M0o/clXbmnOESJAzf6U9tSo2nW/HoK2uNvcosGL09pB3vdWZNteDDLGCgpdFv3yevtsZ5UAkg==
+"@types/heremaps@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@types/heremaps/-/heremaps-3.1.0.tgz#2af3ab7a293e5bae9104b48d5f3c3e751efadd66"
+  integrity sha512-Z8Jkgwg1eevtmd6rWKFzai2ekHCUqYoLLDD49Y/28W+E9BQueGFff/iNCyVJN+jWT4G+alrbRs8g7/joLokGNg==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.1"
