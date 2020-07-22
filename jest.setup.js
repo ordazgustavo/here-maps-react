@@ -3,9 +3,18 @@ require('@testing-library/jest-dom/extend-expect');
 class Platform {
   createDefaultLayers() {
     return {
-      normal: {
-        map: '',
+      vector: {
+        normal: {
+          map: {},
+          traffic: {},
+          trafficincidents: {},
+        }
       },
+      raster: {
+        normal: {},
+        satellite: {},
+        terrain: {},
+      }
     };
   }
 }
@@ -22,7 +31,7 @@ class Circle {
 class DomIcon {}
 class Icon {}
 class Marker {
-  setPosition() {}
+  setGeometry() {}
 }
 class DomMarker extends Marker {}
 class Polyline {}

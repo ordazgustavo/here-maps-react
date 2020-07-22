@@ -6,18 +6,17 @@ import Marker from '../Marker';
 import RouteLine from '../RouteLine';
 import Circle from '../Circle';
 
-const appId = '';
-const appCode = '';
+const apikey = '';
 
 describe('HEREMap', () => {
   it('renders with required props', () => {
-    const { getByTestId } = render(<HEREMap appId={appId} appCode={appCode} />);
+    const { getByTestId } = render(<HEREMap apikey={apikey} />);
     expect(getByTestId('map-container')).toBeTruthy();
   });
 
   it('renders with Marker', () => {
     const { getByTestId } = render(
-      <HEREMap appId={appId} appCode={appCode}>
+      <HEREMap apikey={apikey}>
         <Marker lat={-12.1199408} lng={-77.037241} />
       </HEREMap>,
     );
@@ -26,7 +25,7 @@ describe('HEREMap', () => {
 
   it('renders with RouteLine', () => {
     const { getByTestId } = render(
-      <HEREMap appId={appId} appCode={appCode}>
+      <HEREMap apikey={apikey}>
         <RouteLine shape={['1,2']} />
       </HEREMap>,
     );
@@ -35,7 +34,7 @@ describe('HEREMap', () => {
 
   it('renders with Circle', () => {
     const { getByTestId } = render(
-      <HEREMap appId={appId} appCode={appCode}>
+      <HEREMap apikey={apikey}>
         <Circle radius={10} lat={-12.1199408} lng={-77.037241} />
       </HEREMap>,
     );
