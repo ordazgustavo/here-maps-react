@@ -70,16 +70,16 @@ longitudes.</p>
   });
 
   <span class="hljs-keyword">return</span> (
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">HEREMap</span>
-      <span class="hljs-attr">appId</span>=<span class="hljs-string">"my_app_id"</span>
-      <span class="hljs-attr">appCode</span>=<span class="hljs-string">"my_app_code"</span>
-      <span class="hljs-attr">center</span>=<span class="hljs-string">{{</span> <span class="hljs-attr">lat:</span> <span class="hljs-attr">10.998666</span>, <span class="hljs-attr">lng:</span> <span class="hljs-attr">-63.79841</span> }}
-      <span class="hljs-attr">zoom</span>=<span class="hljs-string">{12}</span>
-    &gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">Marker</span> <span class="hljs-attr">lat</span>=<span class="hljs-string">{10.998666}</span> <span class="hljs-attr">lng</span>=<span class="hljs-string">{-63.79841}</span> /&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">Marker</span> <span class="hljs-attr">lat</span>=<span class="hljs-string">{10.998666}</span> <span class="hljs-attr">lng</span>=<span class="hljs-string">{-63.79841}</span> /&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">RouteLine</span> <span class="hljs-attr">shape</span>=<span class="hljs-string">{shape}</span> <span class="hljs-attr">strokeColor</span>=<span class="hljs-string">"#48dad0"</span> <span class="hljs-attr">lineWidth</span>=<span class="hljs-string">{4}</span> /&gt;</span>
-     <span class="hljs-tag">&lt;/<span class="hljs-name">HEREMap</span>&gt;</span></span>
+    &lt;HEREMap
+      appId="my_app_id"
+      appCode="my_app_code"
+      center={{ lat: 10.998666, lng: -63.79841 }}
+      zoom={12}
+    &gt;
+      &lt;Marker lat={10.998666} lng={-63.79841} /&gt;
+      &lt;Marker lat={10.998666} lng={-63.79841} /&gt;
+      &lt;RouteLine shape={shape} strokeColor="#48dad0" lineWidth={4} /&gt;
+     &lt;/HEREMap&gt;
   );
 }
 </code></pre>
